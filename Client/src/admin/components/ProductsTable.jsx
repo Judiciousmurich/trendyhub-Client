@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProductsTable = () => {
+    const navigate = useNavigate()
     const data = [
         {
             id: 1,
@@ -24,10 +26,11 @@ const ProductsTable = () => {
 
     const handleUpdate = (id) => {
         console.log('Updating item with ID:', id);
+        navigate("/admin/update/" + id)
     };
 
     return (
-        <table className="min-w-full border-collapse">
+        <table className="min-w-full border-collapse m-6  ">
             <thead>
                 <tr>
                     <th className="py-2 text-left px-4 border  bg-gray-200 text-gray-600 font-bold uppercase text-sm border-b">Product Name</th>
