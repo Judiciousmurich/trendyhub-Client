@@ -8,7 +8,7 @@ const SellerProducts = () => {
     
     <div >
         <h1 className='text-[#000000]font-bold text-5xl text-center mb-3'>Best Seller Products</h1>
-        <p className='text-[#b9b9b9] text-center'>speakerThere are many variations passages.</p>
+        <p className='text-[#b9b9b9] text-center text-lg'>speakerThere are many variations passages.</p>
     </div>
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-4 p-6">
       <div className="flex flex-col gap-2 cursor-pointer select">
