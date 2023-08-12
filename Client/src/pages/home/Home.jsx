@@ -13,7 +13,7 @@ const Home = () => {
       <div className="bg-[#dcdcdc] px-[2rem] rounded-[20px] m-6 ">
 
         <div className="flex flex-col gap-2 py-[6rem]">
-          <h5>Beats Solo</h5>
+          <h5 className="font-bold text-lg ">Beats Solo</h5>
           <h1 className="font-bold text-5xl text-[#000000]">Wireless</h1>
           <h1 className="relative font-bold text-[#f8f8f8] sm:text-[10rem] w-full">HEADPHONE</h1>
           <button className="w-fit text-white rounded-[50px] p-2 bg-[#f42c37]">Shop By Category</button>
