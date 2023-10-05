@@ -24,7 +24,6 @@ const Login = () => {
   const onSubmit = (data) => {
     Axios.post(apiDomain + "/auth/login", data)
       .then(({ data }) => {
-        // console.log(data);
         if (data.token) {
           dispatch({ type: "LOGIN_SUCCESS", payload: data.token });
           localStorage.setItem("user", JSON.stringify(data.token));
