@@ -1,69 +1,128 @@
-import { Link } from 'react-router-dom'
-import './cart.css'
-import Clients from '../../../shared/Clients'
-import Product from '../product/Product'
-import CheckoutPage from '../checkout/Checkout'
-import { useNavigate } from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { apiDomain } from "../../../utils/utilsDomain";
+import { FaTrash } from "react-icons/fa";
+import CartFallback from "./FallBack";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Context } from "../../../context/Context";
+import Payment from "../payment/Payment";
 
 
 const Cart = () => {
   const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
+  const { setCartItems: updateItemsCount } = useContext(Context);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-  const handleProceedToCheckout = () => {
-    navigate('/checkout');
+  const getCartItems = async () => {
+    try {
+      const response = await axios.get(`${apiDomain}/cart`);
+      setCartItems(response.data);
+      updateItemsCount(response.data)
+    } catch (error) {
+      console.error("Error fetching cart items:", error);
+    }
   };
 
+  useEffect(() => {
+    getCartItems();
+    console.log(cartItems);
+  }, []);
+
+
+
+
+
+
+  const handleRemoveItem = async (cartItemId) => {
+    try {
+      await axios.delete(`${apiDomain}/cart/${cartItemId}`);
+
+      getCartItems();
+      const removedItem = cartItems.find((item) => item.cart_id === cartItemId);
+
+
+      toast.success(`${removedItem.Name} has been removed from the cart.`, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
+  };
+
+  useEffect(() => {
+    const calculateTotalPrice = () => {
+      console.log(cartItems)
+      const totalPrice = cartItems.reduce(
+        (sum, item) => sum + (item.Quantity * item.Price || 0), 
+        0
+      );
+      return totalPrice;
+    };
+
+    setTotalPrice(calculateTotalPrice());
+  }, [cartItems]);
 
   return (
     <>
+      <ToastContainer />
 
-      <div className='cart'>
-        <div>
-          <div className="flex  gap-10 cursor-pointer select align-middle">
-            <div className=' rounded-[5px]  h-[10rem]'>
-              <img className='rounded-[10px] h-full object-contain mb-4' src="https://demo.phlox.pro/shop-digital/wp-content/uploads/sites/127/2019/09/Group-1269-935x701.jpg" alt="product" />
+
+      <div className="cart sm:flex justify-around p-4">
+        <div className="flex flex-col gap-4">
+          {!cartItems[0] && <CartFallback />}
+          {cartItems.map((item) => (
+            <div key={item.cart_id} className="flex gap-10 cursor-pointer select align-middle">
+              <div className="rounded-[5px] h-[10rem]">
+                <img
+                  className="rounded-[10px] h-full object-contain mb-4"
+                  src={item.ImageLink}
+                  alt="product"
+                />
+              </div>
+
+
+              <div>
+                <h3 className="font-bold hover:text-red-500 transition-all duration-300">
+                  {item.Name}
+                </h3>
+                <p className="relative inline-block group font-bold">
+                  <span className="font-bold ">${item.Price}</span>
+                </p>
+                <br />
+                <button className="bg-[gray] px-3 py-1 w-fit flex items-center gap-2" onClick={() => handleRemoveItem(item.cart_id)}>
+                  <FaTrash /> Remove
+                </button>
+
+              </div>
             </div>
-
-           <div >
-           <h3 className="font-bold  hover:text-red-500 transition-all duration-300">
-              Rocky Mountain
-            </h3>
-            <p className="relative inline-block group font bold">
-              <span className="font-bold ">
-                $8,250
-              </span>
-             
-              </p>
-           </div>
-
-      
-
-
-          </div>
+          ))}
         </div>
         <div>
-          <h3 className='font-bold mb-4 hover:text-red-500 cursor-pointer'>cart summarry</h3>
+          <h3 className="font-bold mb-4 hover:text-red-500 cursor-pointer">
+            Cart Summary
+          </h3>
           <hr />
           <div>
-            <p className='mb-4 font bold'>Total Price:</p>
-            <p className='font-bold mb-4'>$0.000</p>
-       {/* Use the handleProceedToCheckout function to navigate to the CheckoutPage */}
-            <button
-              className='bg-black text-white px-8 py-4 rounded mb-4'
-              onClick={handleProceedToCheckout}
-            >
-              PROCEED TO CHECKOUT
-            </button>
+            <p className="mb-4 font-bold">Total Price:</p>
+            <p className="font-bold mb-4">$ {totalPrice.toFixed(2)}</p>
             
+            <Payment cartItems={cartItems} />
           </div>
         </div>
       </div>
-      <hr/>
-
+      <hr />
     </>
+  );
+};
 
-  )
-}
-
-export default Cart
+export default Cart;

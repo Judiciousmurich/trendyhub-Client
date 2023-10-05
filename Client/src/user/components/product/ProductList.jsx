@@ -28,9 +28,9 @@ const ProductList = () => {
         </i>
       </div>
 
-      <div className="flex">
+      <div className="sm:flex" >
         <div>
-          <div className="flex bg-[#ededed] p-3 rounded-[50px] m-6">
+          <div className="flex bg-[#ededed] p-3 rounded-[50px] m-6 ">
             <input
               type="email"
               placeholder="Search Here"
@@ -46,9 +46,8 @@ const ProductList = () => {
           >
             Product Categories{" "}
             <FaCaretDown
-              className={`inline ml-1 ${
-                showCategories ? "transform rotate-180" : ""
-              }`}
+              className={`inline ml-1 ${showCategories ? "transform rotate-180" : ""
+                }`}
             />
           </h1>
           {showCategories && (
@@ -83,9 +82,8 @@ const ProductList = () => {
           >
             Choose Price{" "}
             <FaCaretDown
-              className={`inline ml-1 ${
-                showPrice ? "transform rotate-180" : ""
-              }`}
+              className={`inline ml-1 ${showPrice ? "transform rotate-180" : ""
+                }`}
             />
           </h1>
 
@@ -98,19 +96,12 @@ const ProductList = () => {
               Showing 1-9 of 10 results
             </h1>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-4">
-            <Product />
-            <Product />
-            <Product />
-            <Product />
-            <Product />
-            <Product />
-            <Product />
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 ">
             <Product />
           </div>
         </div>
       </div>
-      <Clients />
+      {/* <Clients /> */}
     </>
   );
 };

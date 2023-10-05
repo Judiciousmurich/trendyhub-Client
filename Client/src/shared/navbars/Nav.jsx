@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaShoppingBag, FaSearch } from "react-icons/fa";
 import './nav.css';
+import { Context } from '../../context/Context';
+// import '../../context/Context'
+
+
+
 
 const Navbar = () => {
+  const { cartItems } = useContext(Context);
   const handleLogout = () => {
     localStorage.removeItem('user');
 
-    window.location.href = '/login';
+    window.location.href = '/auth/login';
   };
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -20,21 +26,29 @@ const Navbar = () => {
 
         </div>
         <div className="links">
-          <NavLink to="/" >
-            Home
-          </NavLink>
-          <NavLink to="/products" >
-            Shop
-          </NavLink>
-          <NavLink to="/about" >
-            About us
-          </NavLink>
-          <NavLink to="/blog" >
-            Blog
-          </NavLink>
-          <NavLink to="/contact" >
-            Contact Us
-          </NavLink>
+          {user && (
+            <>
+              <NavLink to="/" >
+                Home
+              </NavLink>
+              <NavLink to="/products" >
+                Shop
+              </NavLink>
+              <NavLink to="/about" >
+                About us
+              </NavLink>
+              <NavLink to="/blog" >
+                Blog
+              </NavLink>
+              <NavLink to="/contact" >
+                Contact Us
+              </NavLink>
+              <NavLink to="/track" >
+                Track Order
+              </NavLink>
+            </>
+
+          )}
         </div>
         {!user && (
           <NavLink to="/auth/login" className="btn">
@@ -55,10 +69,13 @@ const Navbar = () => {
           </p>
           <p>
 
-            <NavLink to="cart">
-
-              <FaShoppingBag />
+            <NavLink to="/cart" className="relative  flex  items-center  ">
+              <FaShoppingBag/>
+              {cartItems.length > 0 && (
+                <span className="notification-badge">{cartItems.length}</span>
+              )}
             </NavLink>
+
           </p>
         </div>
       </div>
